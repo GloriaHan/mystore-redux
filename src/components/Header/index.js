@@ -1,4 +1,6 @@
 import React, { useContext } from "react";
+import { connect } from "react-redux";
+import { addincartAction, sameincartAction} from "../../redux/actions/addincart";
 import { useNavigate } from "react-router-dom";
 import {
   Img,
@@ -15,10 +17,10 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
-import { CartContext, InputContext } from "../App/index";
+import { InputContext } from "../App/index";
 
-export default function Header() {
-  const { productsInCart } = useContext(CartContext);
+function Header({ productsInCart, addincartAction,sameincartAction }) {
+  // const { productsInCart } = useContext(CartContext);
   const { inputValue, setInputValue } = useContext(InputContext);
   const navigate = useNavigate();
   const productsQty =
@@ -26,12 +28,16 @@ export default function Header() {
       ? productsInCart.reduce((a, b) => a + b.qty, 0)
       : 0;
 
+      // console.log(productsInCart)
+
   return (
     <Root>
-      <div  onClick={() => {
-              navigate("/");
-              setInputValue("");
-            }}>
+      <div
+        onClick={() => {
+          navigate("/");
+          setInputValue("");
+        }}
+      >
         <Img src={shoppinglogo} alt="logo" />
       </div>
       <SearchBar>
@@ -68,10 +74,12 @@ export default function Header() {
         </Box>
       </SearchBar>
 
-      <CartButton  onClick={() => {
-              navigate("/cart");
-              setInputValue("");
-            }}>
+      <CartButton
+        onClick={() => {
+          navigate("/cart");
+          setInputValue("");
+        }}
+      >
         <Badge badgeContent={productsQty} color="error">
           <ShoppingCart fontSize="large" />
         </Badge>
@@ -79,3 +87,8 @@ export default function Header() {
     </Root>
   );
 }
+
+export default connect((state) => ({ productsInCart: state.sumInCart }), {
+  addincartAction: addincartAction,
+  sameincartAction: sameincartAction,
+})(Header);

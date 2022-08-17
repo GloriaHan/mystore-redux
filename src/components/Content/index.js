@@ -1,20 +1,22 @@
 import React, { useEffect, useState, useContext } from "react";
+import { connect } from "react-redux";
+import { addincartAction } from "../../redux/actions/addincart";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Root, Img, Title, Product, Price,NoResult } from "./Content.style";
+import { Root, Img, Title, Product, Price, NoResult } from "./Content.style";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { CartContext, InputContext } from "../App/index";
+import { InputContext } from "../App/index";
 
-export default function Content() {
+function Content({ productsInCart, addincartAction }) {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const { category } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search");
-  const { productsInCart, setProductsInCart } = useContext(CartContext);
+  // const { productsInCart, setProductsInCart } = useContext(CartContext);
   const { setInputValue } = useContext(InputContext);
 
   useEffect(() => {
@@ -82,9 +84,9 @@ export default function Content() {
                     );
                     if (result) {
                       result.qty = result.qty + 1 * 1;
-                      setProductsInCart([...productsInCart]);
+                      addincartAction([...productsInCart]);
                     } else {
-                      setProductsInCart([
+                      addincartAction([
                         ...productsInCart,
                         { ...item, qty: 1 },
                       ]);
@@ -101,3 +103,7 @@ export default function Content() {
     </Root>
   );
 }
+
+export default connect((state) => ({ productsInCart: state.sumInCart }), {
+  addincartAction: addincartAction,
+})(Content);

@@ -1,5 +1,7 @@
-import React, { useContext } from "react";
-import { CartContext } from "../App/index";
+import React from "react";
+// import { CartContext } from "../App/index";
+import { connect } from "react-redux";
+import { addincartAction } from "../../redux/actions/addincart";
 import {
   Root,
   Th,
@@ -25,8 +27,8 @@ import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
 import ChipDelete from "@mui/joy/ChipDelete";
 
-export default function Cart() {
-  const { productsInCart, setProductsInCart } = useContext(CartContext);
+function Cart({ productsInCart, addincartAction }) {
+  // const { productsInCart, setProductsInCart } = useContext(CartContext);
 
   const productsQty =
     productsInCart.length > 0
@@ -42,14 +44,16 @@ export default function Cart() {
     let result = productsInCart.find((itemObj) => itemObj.id === item.id);
     if (result) {
       result.qty = e.target.value;
-      setProductsInCart([...productsInCart]);
+      // setProductsInCart([...productsInCart])
+      addincartAction([...productsInCart])
+        ;
     }
   };
   const deleteProduct = (e, item) => {
     const newProductsList = [...productsInCart].filter((itemObj) => {
       return itemObj.id !== item.id;
     });
-    setProductsInCart(newProductsList);
+    addincartAction(newProductsList);
   };
   return (
     <Root>
@@ -133,3 +137,8 @@ export default function Cart() {
     </Root>
   );
 }
+
+export default connect(
+  (state) => ({productsInCart: state.sumInCart}),
+  {addincartAction: addincartAction}
+)(Cart);
