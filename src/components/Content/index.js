@@ -39,6 +39,12 @@ function Content({ productsInCart, addincartAction }) {
     })();
   }, [category, search]);
 
+
+  const addToCart = (product) => {
+    // console.log("productsInCart", productsInCart);
+    addincartAction({ ...product, qty:1 });
+   };
+
   if (loading === true) return null;
   return (
     <Root>
@@ -79,18 +85,7 @@ function Content({ productsInCart, addincartAction }) {
                     e.stopPropagation();
                     navigate("/cart");
                     setInputValue("");
-                    let result = productsInCart.find(
-                      (product) => product.id === item.id
-                    );
-                    if (result) {
-                      result.qty = result.qty + 1 * 1;
-                      addincartAction([...productsInCart]);
-                    } else {
-                      addincartAction([
-                        ...productsInCart,
-                        { ...item, qty: 1 },
-                      ]);
-                    }
+                    addToCart(item);
                   }}
                 >
                   BUY NOW

@@ -1,2 +1,3 @@
 export const ADDINCART ='addincart'
-export const SAMEINCART = 'sameincart'
+export const UPDATEINCART = 'updateincart'
+export const DELETEINCART = 'deleteincart'

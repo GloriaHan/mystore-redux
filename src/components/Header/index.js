@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { connect } from "react-redux";
-import { addincartAction, sameincartAction} from "../../redux/actions/addincart";
+import { addincartAction } from "../../redux/actions/addincart";
 import { useNavigate } from "react-router-dom";
 import {
   Img,
@@ -19,7 +19,7 @@ import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import { InputContext } from "../App/index";
 
-function Header({ productsInCart, addincartAction,sameincartAction }) {
+function Header({ productsInCart }) {
   // const { productsInCart } = useContext(CartContext);
   const { inputValue, setInputValue } = useContext(InputContext);
   const navigate = useNavigate();
@@ -90,5 +90,4 @@ function Header({ productsInCart, addincartAction,sameincartAction }) {
 
 export default connect((state) => ({ productsInCart: state.sumInCart }), {
   addincartAction: addincartAction,
-  sameincartAction: sameincartAction,
 })(Header);

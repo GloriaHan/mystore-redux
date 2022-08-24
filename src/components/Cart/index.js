@@ -1,7 +1,7 @@
 import React from "react";
 // import { CartContext } from "../App/index";
 import { connect } from "react-redux";
-import { addincartAction } from "../../redux/actions/addincart";
+import { updateincartAction,deleteincartAction } from "../../redux/actions/addincart";
 import {
   Root,
   Th,
@@ -27,7 +27,7 @@ import Box from "@mui/joy/Box";
 import Chip from "@mui/joy/Chip";
 import ChipDelete from "@mui/joy/ChipDelete";
 
-function Cart({ productsInCart, addincartAction }) {
+function Cart({ productsInCart, updateincartAction,deleteincartAction }) {
   // const { productsInCart, setProductsInCart } = useContext(CartContext);
 
   const productsQty =
@@ -40,21 +40,25 @@ function Cart({ productsInCart, addincartAction }) {
       ? productsInCart.reduce((a, b) => a + b.qty * b.price, 0)
       : 0;
 
-  const addToCart = (e, item) => {
-    let result = productsInCart.find((itemObj) => itemObj.id === item.id);
-    if (result) {
-      result.qty = e.target.value;
+  const addToCart = (e, product) => {
+    let result = productsInCart.find((itemObj) => itemObj.id === product.id);
+     if (result) {
+     result.qty = e.target.value;
       // setProductsInCart([...productsInCart])
-      addincartAction([...productsInCart])
-        ;
-    }
+    console.log("productsInCart:", productsInCart )
+
+    updateincartAction([...productsInCart])
+     }
   };
-  const deleteProduct = (e, item) => {
-    const newProductsList = [...productsInCart].filter((itemObj) => {
-      return itemObj.id !== item.id;
-    });
-    addincartAction(newProductsList);
+
+  const deleteProduct = (e,item) => {
+    // const newProductsList = [...productsInCart].filter((itemObj) => {
+    //   return itemObj.id !== item.id;
+    // });
+     console.log("newproductslist:", item )
+    deleteincartAction(item);
   };
+
   return (
     <Root>
       <Header>Your shopping Cart : {productsQty} items </Header>
@@ -109,7 +113,7 @@ function Cart({ productsInCart, addincartAction }) {
                 <Td>
                   <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                     <Chip
-                      onClick={(e) => deleteProduct(e, item)}
+                      onClick={(e) => deleteProduct(e,item)}
                       variant="outlined"
                       color="danger"
                       endDecorator={<ChipDelete />}
@@ -140,5 +144,6 @@ function Cart({ productsInCart, addincartAction }) {
 
 export default connect(
   (state) => ({productsInCart: state.sumInCart}),
-  {addincartAction: addincartAction}
+ {updateincartAction: updateincartAction,
+  deleteincartAction:deleteincartAction}
 )(Cart);

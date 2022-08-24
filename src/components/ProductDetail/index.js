@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
-  addincartAction,
-  sameincartAction,
+  addincartAction
 } from "../../redux/actions/addincart";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactImageMagnify from "react-image-magnify";
@@ -24,7 +23,7 @@ import {
   RatingContainer,
 } from "./ProductDetail.style";
 
-function ProductDetail({ productsInCart, addincartAction, sameincartAction }) {
+function ProductDetail({ productsInCart, addincartAction }) {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState();
   const { id } = useParams();
@@ -48,18 +47,9 @@ function ProductDetail({ productsInCart, addincartAction, sameincartAction }) {
   }, [id]);
 
   const addToCart = () => {
-    let result = productsInCart.find((item) => item[0].id === product.id);
-    console.log(product);
-    console.log(productsInCart);
-    // item.id === product.id
-    if (result) {
-      result[0].qty = result[0].qty + qty;
-      console.log(result);
-      sameincartAction();
-    } else {
-      addincartAction([{ ...product, qty }]);
-    }
-  };
+    console.log("productsInCart", productsInCart);
+    addincartAction({ ...product, qty });
+   };
 
   if (loading === true) return null;
   return (
@@ -161,6 +151,5 @@ function ProductDetail({ productsInCart, addincartAction, sameincartAction }) {
 }
 
 export default connect((state) => ({ productsInCart: state.sumInCart }), {
-  addincartAction: addincartAction,
-  sameincartAction: sameincartAction,
+  addincartAction: addincartAction
 })(ProductDetail);
