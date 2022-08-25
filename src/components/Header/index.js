@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { addincartAction } from "../../redux/actions/addincart";
+import { searchvalueAction } from "../../redux/actions/searchvalue";
 import { useNavigate } from "react-router-dom";
 import {
   Img,
@@ -17,25 +18,21 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
-import { InputContext } from "../App/index";
 
-function Header({ productsInCart }) {
-  // const { productsInCart } = useContext(CartContext);
-  const { inputValue, setInputValue } = useContext(InputContext);
+function Header({ productsInCart, inputValue, searchvalueAction }) {
+ 
   const navigate = useNavigate();
   const productsQty =
     productsInCart.length > 0
       ? productsInCart.reduce((a, b) => a + b.qty, 0)
       : 0;
 
-      // console.log(productsInCart)
-
   return (
     <Root>
       <div
         onClick={() => {
           navigate("/");
-          setInputValue("");
+          searchvalueAction("");
         }}
       >
         <Img src={shoppinglogo} alt="logo" />
@@ -56,7 +53,7 @@ function Header({ productsInCart }) {
             inputProps={{ "aria-label": "Buying makes us happy" }}
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => searchvalueAction(e.target.value)}
           />
           <IconButton sx={{ p: "10px" }} aria-label="search">
             <SearchIcon />
@@ -77,7 +74,7 @@ function Header({ productsInCart }) {
       <CartButton
         onClick={() => {
           navigate("/cart");
-          setInputValue("");
+          searchvalueAction("");
         }}
       >
         <Badge badgeContent={productsQty} color="error">
@@ -88,6 +85,13 @@ function Header({ productsInCart }) {
   );
 }
 
-export default connect((state) => ({ productsInCart: state.sumInCart }), {
-  addincartAction: addincartAction,
-})(Header);
+export default connect(
+  (state) => ({
+    productsInCart: state.sumInCart,
+    inputValue: state.searchValue,
+  }),
+  {
+    addincartAction: addincartAction,
+    searchvalueAction: searchvalueAction,
+  }
+)(Header);

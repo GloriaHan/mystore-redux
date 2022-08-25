@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import { Root, List } from "./SideBar.style";
 import Box from "@mui/material/Box";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useNavigate, useParams } from "react-router-dom";
-import { InputContext } from "../App/index";
+import { searchvalueAction } from "../../redux/actions/searchvalue";
 
-export default function Sidebar() {
+function Sidebar({inputValue, searchvalueAction,}) {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState();
   const navigate = useNavigate();
   const { category } = useParams();
-  const { setInputValue } = useContext(InputContext);
 
   useEffect(() => {
     (async () => {
@@ -31,7 +31,7 @@ export default function Sidebar() {
           <ListItemButton
             onClick={() => {
               navigate("/mystore/products");
-              setInputValue("");
+              searchvalueAction("");
             }}
             selected={category === undefined}
           >
@@ -43,7 +43,7 @@ export default function Sidebar() {
               key={item}
               onClick={() => {
                 navigate(`/mystore/products/${item}`);
-                setInputValue("");
+                searchvalueAction("");
               }}
               selected={item === category}
             >
@@ -55,3 +55,12 @@ export default function Sidebar() {
     </Root>
   );
 }
+
+export default connect(
+  (state) => ({
+    inputValue: state.searchValue,
+  }),
+  {
+    searchvalueAction: searchvalueAction,
+  }
+)(Sidebar);

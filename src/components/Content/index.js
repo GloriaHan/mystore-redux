@@ -1,15 +1,20 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { addincartAction } from "../../redux/actions/addincart";
+import { searchvalueAction } from "../../redux/actions/searchvalue";
 import { useParams, useSearchParams } from "react-router-dom";
 import { Root, Img, Title, Product, Price, NoResult } from "./Content.style";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { InputContext } from "../App/index";
 
-function Content({ productsInCart, addincartAction }) {
+function Content({
+  productsInCart,
+  inputValue,
+  addincartAction,
+  searchvalueAction,
+}) {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const { category } = useParams();
@@ -17,7 +22,7 @@ function Content({ productsInCart, addincartAction }) {
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search");
   // const { productsInCart, setProductsInCart } = useContext(CartContext);
-  const { setInputValue } = useContext(InputContext);
+  // const { setInputValue } = useContext(InputContext);
 
   useEffect(() => {
     (async () => {
@@ -39,11 +44,9 @@ function Content({ productsInCart, addincartAction }) {
     })();
   }, [category, search]);
 
-
   const addToCart = (product) => {
-    // console.log("productsInCart", productsInCart);
-    addincartAction({ ...product, qty:1 });
-   };
+    addincartAction({ ...product, qty: 1 });
+  };
 
   if (loading === true) return null;
   return (
@@ -72,7 +75,7 @@ function Content({ productsInCart, addincartAction }) {
               <Product
                 onClick={() => {
                   navigate(`/products/${item.id}`);
-                  setInputValue("");
+                  searchvalueAction("");
                 }}
               >
                 <Img src={item.image} alt={item.title} />
@@ -84,7 +87,7 @@ function Content({ productsInCart, addincartAction }) {
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate("/cart");
-                    setInputValue("");
+                    searchvalueAction("");
                     addToCart(item);
                   }}
                 >
@@ -99,6 +102,13 @@ function Content({ productsInCart, addincartAction }) {
   );
 }
 
-export default connect((state) => ({ productsInCart: state.sumInCart }), {
-  addincartAction: addincartAction,
-})(Content);
+export default connect(
+  (state) => ({
+    productsInCart: state.sumInCart,
+    inputValue: state.searchValue,
+  }),
+  {
+    addincartAction: addincartAction,
+    searchvalueAction: searchvalueAction,
+  }
+)(Content);
