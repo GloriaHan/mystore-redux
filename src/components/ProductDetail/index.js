@@ -1,7 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import {
+  addincartAction
+} from "../../redux/actions/addincart";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactImageMagnify from "react-image-magnify";
-import { CartContext } from "../App/index";
+// import { CartContext } from "../App/index";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -19,13 +23,13 @@ import {
   RatingContainer,
 } from "./ProductDetail.style";
 
-export default function ProdectDetail() {
+function ProductDetail({ productsInCart, addincartAction }) {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState();
   const { id } = useParams();
   const navigate = useNavigate();
   const [qty, setQty] = React.useState(1);
-  const { productsInCart, setProductsInCart } = useContext(CartContext);
+  // const { productsInCart, setProductsInCart } = useContext(CartContext);
 
   const handleChange = (event) => {
     setQty(event.target.value);
@@ -43,14 +47,10 @@ export default function ProdectDetail() {
   }, [id]);
 
   const addToCart = () => {
-    let result = productsInCart.find((item) => item.id === product.id);
-    if (result) {
-      result.qty = result.qty + qty;
-      setProductsInCart([...productsInCart]);
-    } else {
-      setProductsInCart([...productsInCart, { ...product, qty }]);
-    }
-  };
+    console.log("productsInCart", productsInCart);
+    addincartAction({ ...product, qty });
+   };
+
   if (loading === true) return null;
   return (
     <div>
@@ -149,3 +149,7 @@ export default function ProdectDetail() {
     </div>
   );
 }
+
+export default connect((state) => ({ productsInCart: state.sumInCart }), {
+  addincartAction: addincartAction
+})(ProductDetail);

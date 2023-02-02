@@ -1,5 +1,8 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react'
+import { connect } from 'react-redux'
+import { addincartAction } from '../../redux/actions/addincart'
+import { searchvalueAction } from '../../redux/actions/searchvalue'
+import { useNavigate } from 'react-router-dom'
 import {
   Img,
   Root,
@@ -7,57 +10,62 @@ import {
   StyledButton,
   ShoppingCart,
   CartButton,
-} from "./Header.style";
-import shoppinglogo from "../../assets/image/shoppinglogo.png";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import Badge from "@mui/material/Badge";
-import Box from "@mui/material/Box";
-import { CartContext, InputContext } from "../App/index";
+} from './Header.style'
+import shoppinglogo from '../../assets/image/shoppinglogo.png'
+import Paper from '@mui/material/Paper'
+import InputBase from '@mui/material/InputBase'
+import IconButton from '@mui/material/IconButton'
+import SearchIcon from '@mui/icons-material/Search'
+import Badge from '@mui/material/Badge'
+import Box from '@mui/material/Box'
 
-export default function Header() {
-  const { productsInCart } = useContext(CartContext);
-  const { inputValue, setInputValue } = useContext(InputContext);
-  const navigate = useNavigate();
+function Header({ productsInCart, inputValue, searchvalueAction }) {
+  const navigate = useNavigate()
   const productsQty =
     productsInCart.length > 0
       ? productsInCart.reduce((a, b) => a + b.qty, 0)
-      : 0;
+      : 0
 
+  const enterChange = (e) => {
+    if (e.keyCode === 13) {
+      navigate(`/mystore/products?search=${inputValue}`)
+      console.log('enter')
+    }
+  }
   return (
     <Root>
-      <div  onClick={() => {
-              navigate("/");
-              setInputValue("");
-            }}>
+      <div
+        onClick={() => {
+          navigate('/')
+          searchvalueAction('')
+        }}
+      >
         <Img src={shoppinglogo} alt="logo" />
       </div>
       <SearchBar>
         <Paper
-          component="form"
           sx={{
-            p: "2px 4px",
-            display: "flex",
-            alignItems: "center",
+            p: '2px 4px',
+            display: 'flex',
+            alignItems: 'center',
             width: 400,
           }}
         >
           <InputBase
             sx={{ ml: 1, flex: 1 }}
-            placeholder="Buying makes us happy"
-            inputProps={{ "aria-label": "Buying makes us happy" }}
+            placeholder="Shopping makes me happy"
+            inputProps={{ 'aria-label': 'Shopping makes me happy' }}
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => searchvalueAction(e.target.value)}
+            onKeyUp={enterChange}
           />
-          <IconButton sx={{ p: "10px" }} aria-label="search">
+          <IconButton sx={{ p: '10px' }} aria-label="search">
             <SearchIcon />
           </IconButton>
         </Paper>
 
-        <Box sx={{ "& button": { m: 1 } }}>
+        <Box sx={{ '& button': { m: 1 } }}>
           <StyledButton
             onClick={() => navigate(`/mystore/products?search=${inputValue}`)}
             variant="contained"
@@ -68,14 +76,27 @@ export default function Header() {
         </Box>
       </SearchBar>
 
-      <CartButton  onClick={() => {
-              navigate("/cart");
-              setInputValue("");
-            }}>
+      <CartButton
+        onClick={() => {
+          navigate('/cart')
+          searchvalueAction('')
+        }}
+      >
         <Badge badgeContent={productsQty} color="error">
           <ShoppingCart fontSize="large" />
         </Badge>
       </CartButton>
     </Root>
-  );
+  )
 }
+
+export default connect(
+  (state) => ({
+    productsInCart: state.sumInCart,
+    inputValue: state.searchValue,
+  }),
+  {
+    addincartAction: addincartAction,
+    searchvalueAction: searchvalueAction,
+  }
+)(Header)
