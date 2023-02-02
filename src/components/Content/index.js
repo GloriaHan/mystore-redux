@@ -23,7 +23,7 @@ function Content({
   const search = searchParams.get("search");
   // const { productsInCart, setProductsInCart } = useContext(CartContext);
   // const { setInputValue } = useContext(InputContext);
-
+console.log(search)
   useEffect(() => {
     (async () => {
       const url = `${process.env.REACT_APP_BASE_URL}/products${

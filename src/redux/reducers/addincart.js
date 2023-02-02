@@ -21,12 +21,14 @@ export default function addincart_reducer(preState = initState, action) {
         return itemObj.id !== data.id;
       });
       return [ ...result];
+
     }
 
     case UPDATEINCART:{
       return [ ...preState];
     }
     default:
-      return initState;
+      return preState;
+
   }
 }

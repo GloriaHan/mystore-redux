@@ -1,14 +1,14 @@
-import { SEARCHVALUE } from "../constant";
+import { SEARCHVALUE } from '../constant'
 
-const initState = [];
+const initState = []
 export default function searchvalue_reducer(preState = initState, action) {
-  const { type, data } = action;
+  const { type, data } = action
   switch (type) {
     case SEARCHVALUE: {
-      return [data];
+      return [data]
     }
-    
+
     default:
-      return initState;
+      return initState
   }
 }

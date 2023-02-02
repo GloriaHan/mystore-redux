@@ -135,7 +135,7 @@ function Cart({ productsInCart, updateincartAction,deleteincartAction }) {
           <p>Post fee : Free</p>
         </div>
         <div>
-          <p>Total: ${`$${Number(totalPrice).toFixed(2)}`}</p>
+          <p>Total: ${`${Number(totalPrice).toFixed(2)}`}</p>
         </div>
       </Container>
     </Root>
